@@ -13,7 +13,7 @@ public class Contato {
 
     }
 
-    public Contato(String nome, String email, boolean verificaNumero, String telefone, String celular, String site) {
+    public Contato(String nome, String email, String telefone, boolean verificaNumero, String celular, String site) {
         this.nome = nome;
         this.email = email;
         this.verificaNumero = verificaNumero;

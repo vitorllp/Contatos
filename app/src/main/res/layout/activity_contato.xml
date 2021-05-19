@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".ContatoActivity"
     android:padding="5dp">
 
     <EditText
@@ -83,33 +83,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/celularText"
         android:onClick="onClick"/>
-    <Button
-        android:id="@+id/buttonEmail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Enviar email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSalvar"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/buttonTelefone"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Ligar telefone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonEmail"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/buttonSite"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Acessar site"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTelefone"
-        android:onClick="onClick"/>
+
+
     <Button
         android:id="@+id/buttonPDF"
         android:layout_width="0dp"
@@ -117,7 +92,7 @@
         android:text="Exportar pdf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSite"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSalvar"
         android:onClick="onClick"
         />
 
