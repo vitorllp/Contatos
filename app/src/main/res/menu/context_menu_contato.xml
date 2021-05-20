@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/acoesMg">
-        <item android:id="@+id/enviarEmailMi"
-            android:title="Enviar email"/>
-        <item android:id="@+id/ligarMi"
-            android:title="Chamar"/>
-        <item android:id="@+id/acessarSiteMi"
-            android:title="Acessao site" />
+    <group android:id="@+id/acoesMG">
+        <item android:id="@+id/enviarEmailMI"
+            android:title="Enviar e-mail"/>
+        <item android:id="@+id/ligarMI"
+            android:title="Ligar"/>
+        <item android:id="@+id/acessarSitelMI"
+            android:title="Acessar site"/>
     </group>
-    <group android:id="@+id/contatoMg">
-        <item android:id="@+id/detalhesContatoMi"
-            android:title="Detalhes" />
-        <item android:id="@+id/editarContatoMi"
-            android:title="Editar" />
-        <item android:id="@+id/removerContatoMi"
-            android:title="Remover" />
+    <group android:id="@+id/contatoMG">
+        <item android:id="@+id/editarContatoMI"
+            android:title="Editar"/>
+        <item android:id="@+id/removerContatoMI"
+            android:title="Remover"/>
     </group>
 </menu>

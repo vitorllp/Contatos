@@ -30,8 +30,8 @@ public class ContatosAdapter extends ArrayAdapter<Contato> {
 
             //referencias para as views internas da celula com o holder
             contatoViewHolder = new ContatoViewHolder();
-            contatoViewHolder.nomeContatoTv = convertView.findViewById(R.id.nomeContatoTv);
-            contatoViewHolder.emailContatoTv = convertView.findViewById(R.id.emailContatoTv);
+            contatoViewHolder.nomeContatoTv = viewContatoBinding.nomeContatoTv;
+            contatoViewHolder.emailContatoTv = viewContatoBinding.emailContatoTv;
             convertView.setTag(contatoViewHolder);
         }
         contatoViewHolder = (ContatoViewHolder) convertView.getTag();

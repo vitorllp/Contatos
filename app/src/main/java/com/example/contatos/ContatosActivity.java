@@ -28,6 +28,7 @@ public class ContatosActivity extends AppCompatActivity {
     private final int NOVO_CONTATO_REQUEST_CODE = 0;
     private Contato contato;
     private int CALL_PHONE_PERMISSION_REQUEST_CODE = 0;
+    private final int EDITAR_CONTATO_REQUEST_CODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +37,40 @@ public class ContatosActivity extends AppCompatActivity {
         setContentView(activityContatosBinding.getRoot());
 
         contatosList = new ArrayList<>();
-        popularContatosList();
+        popularContatos();
 
-        contatosAdapter = new ArrayAdapter(
+        contatosAdapter = new ContatosAdapter(
                 this,
-                android.R.layout.simple_list_item_1,
+               R.layout.view_contato,
                 contatosList
         );
 
         activityContatosBinding.contatosLv.setAdapter(contatosAdapter);
 
         registerForContextMenu(activityContatosBinding.contatosLv);
+
+        activityContatosBinding.contatosLv.setOnItemClickListener(((parent, view, position, id) -> {
+            contato = contatosList.get(position);
+            Intent detalhesIntent = new Intent(this, ContatoActivity.class);
+            detalhesIntent.putExtra(Intent.EXTRA_USER, contato);
+            startActivity(detalhesIntent);
+
+        }));
+    }
+
+    private void popularContatos() {
+        for (int i = 0; i < 20; i++) {
+            contatosList.add(
+                    new Contato(
+                            "Nome " + i,
+                            "E-mail " + i,
+                            "Telefone " + i,
+                            ( i % 2 == 0 ) ? false : true,
+                            "Celular " + i,
+                            "www.site" + i + ".com.br"
+                    )
+            );
+        }
     }
 
     @Override
@@ -55,33 +79,17 @@ public class ContatosActivity extends AppCompatActivity {
         unregisterForContextMenu(activityContatosBinding.contatosLv);
     }
 
-    private void popularContatosList(){
-        for (int i = 0; i<20;i++){
-            contatosList.add(
-                    new Contato(
-                            "Nome "+ i,
-                            "Email "+ i,
-                            "Telefone "+ i,
-                            (i % 2 == 0) ? false :true,
-                            "Celular " + i,
-                            "www.sote" + i + ".com.br"
-                    )
-            );
-        }
-    }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_contatos,menu);
+        getMenuInflater().inflate(R.menu.menu_contatos, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()==R.id.novoContatoMi)
-        {
-            Intent novoContatoItent = new Intent(this,ContatoActivity.class);
-            startActivityForResult(novoContatoItent,NOVO_CONTATO_REQUEST_CODE);
+        if (item.getItemId() == R.id.novoContatoMi) {
+            Intent novoContatoIntent = new Intent(this, ContatoActivity.class);
+            startActivityForResult(novoContatoIntent, NOVO_CONTATO_REQUEST_CODE);
             return true;
         }
         return false;
@@ -90,48 +98,68 @@ public class ContatosActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == NOVO_CONTATO_REQUEST_CODE && resultCode == RESULT_OK){
-            Contato contato = (Contato) data.getSerializableExtra(Intent.EXTRA_USER);
-            if(contato!=null){
+        if(requestCode == NOVO_CONTATO_REQUEST_CODE && resultCode == RESULT_OK) {
+            Contato contato = (Contato) data.getSerializableExtra(Intent.EXTRA_USER); // modo sem criar constante
+            if (contato != null) {
                 contatosList.add(contato);
-                contatosAdapter.notifyDataSetChanged();
+                contatosAdapter.notifyDataSetChanged(); // notifica o adapter a alteracao no conjunto de dados
+            }
+        }
+        else{
+            if(requestCode == EDITAR_CONTATO_REQUEST_CODE && resultCode == RESULT_OK){
+                Contato contato = (Contato) data.getSerializableExtra(Intent.EXTRA_USER); // modo sem criar constante
+                int posicao = data.getIntExtra(Intent.EXTRA_INDEX, -1);
+                if (contato != null && posicao != -1) {
+                    contatosList.remove(posicao);
+                    contatosList.add(posicao, contato);
+                    contatosAdapter.notifyDataSetChanged(); // notifica o adapter a alteracao no conjunto de dados
+                }
             }
         }
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        getMenuInflater().inflate(R.menu.context_menu_contato,menu);
+        getMenuInflater().inflate(R.menu.context_menu_contato, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        //posicao
-        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        contato = contatosAdapter.getItem(menuInfo.position);
-        switch (item.getItemId()){
-            case R.id.enviarEmailMi:
-                Intent enviarEmailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto: "));
-                enviarEmailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{contato.getEmail()});
-                enviarEmailIntent.putExtra(Intent.EXTRA_TEXT,contato.toString());
-                 startActivity(enviarEmailIntent);
+
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        contato = contatosList.get(menuInfo.position);
+
+        switch (item.getItemId()) {
+            case R.id.enviarEmailMI:
+                Intent enviarEmailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(("mailto:")));
+                enviarEmailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{contato.getEmail()});
+                enviarEmailIntent.putExtra(Intent.EXTRA_SUBJECT, contato.getNome());
+                enviarEmailIntent.putExtra(Intent.EXTRA_TEXT, contato.toString());
+                startActivity(enviarEmailIntent);
                 return true;
-            case R.id.ligarMi:
+            case R.id.ligarMI:
                 verifyCallPhonePermission();
                 return true;
-            case R.id.acessarSiteMi:
-                Intent abrirNavegadorIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://"+contato.getSite()));
+            case R.id.acessarSitelMI:
+                Intent abrirNavegadorIntent = new Intent(Intent.ACTION_VIEW);
+                abrirNavegadorIntent.setData(Uri.parse("https://" + contato.getSite()));
                 startActivity(abrirNavegadorIntent);
                 return true;
-            case R.id.detalhesContatoMi:
+            case R.id.editarContatoMI:
+                Intent editarContatoIntent = new Intent(this, ContatoActivity.class);
+                editarContatoIntent.putExtra(Intent.EXTRA_USER, contato);
+                editarContatoIntent.putExtra(Intent.EXTRA_INDEX, menuInfo.position);
+                startActivityForResult(editarContatoIntent, EDITAR_CONTATO_REQUEST_CODE);
                 return true;
-            case R.id.editarContatoMi:
+            case R.id.removerContatoMI:
+                contatosList.remove(contato);
+                contatosAdapter.notifyDataSetChanged();
                 return true;
-            case R.id.removerContatoMi:
-                return true;
-            default:return false;
+            default:
+                return false;
         }
-
     }
 
     private void verifyCallPhonePermission(){
@@ -148,8 +176,4 @@ public class ContatosActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 }

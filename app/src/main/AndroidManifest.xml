@@ -3,6 +3,7 @@
     package="com.example.contatos">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,12 +15,10 @@
         <activity android:name=".ContatosActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ContatoActivity">
-        </activity>
+        <activity android:name=".ContatoActivity"/>
     </application>
 
 </manifest>
